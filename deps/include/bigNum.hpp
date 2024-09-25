@@ -20,7 +20,8 @@ public:
     int maxlen;
     BASE *coef;
 
-    explicit BN(int ml = 1, int t = 0);
+    BN();
+    explicit BN(int ml, int t);
     BN(const BN&);
     ~BN();
     BN(const BASE&);

@@ -1,5 +1,3 @@
-#pragma once
-
 #include <ctime>
 #include <cstdlib>
 #include <cstring>
@@ -45,6 +43,10 @@ BN BN::pow_mod(const BN& exponent, const BN& mod) const {
 
     return result;
 }
+
+BN::BN() : BN(1, 0) {
+
+};
 
 BN::BN(int ml, int t){
     maxlen = ml;
@@ -937,7 +939,7 @@ BN BN::square() {
 BN BN::pow(int y) {
     BN z;
     int n = numberOfDigit(y),
-        mask = 1 << n - 2;
+        mask = 1 << (n - 2);
     z = *this;
     for (int i = n - 2; i > -1; i--) {
         z = z.square();

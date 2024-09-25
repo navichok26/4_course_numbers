@@ -1,5 +1,3 @@
-#pragma once
-
 #include <bigNum.hpp> // Подключаем BigNum
 #include <iostream>
 #include <cstdlib>
