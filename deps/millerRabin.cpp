@@ -1,10 +1,9 @@
-// Miller-Rabin.h
-#ifndef MILLER_RABIN_H
-#define MILLER_RABIN_H
+#pragma once
 
-#include "bigNum.h" // Подключаем BigNum
+#include <bigNum.hpp> // Подключаем BigNum
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 // Функция Эйлера (phi)
 BN phi(BN n) {
@@ -69,6 +68,3 @@ void error_phi(BN n, int t) {
     double X = pow(phi_val.to_double() / (4 * n.to_double()), t);
     cout << "Вероятность ошибки = " << X << endl;
 }
-
-
-#endif // MILLER_RABIN_H
