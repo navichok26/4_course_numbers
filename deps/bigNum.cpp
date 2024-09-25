@@ -1,5 +1,3 @@
-#pragma once
-
 #include <ctime>
 #include <cstdlib>
 #include <cstring>
@@ -7,66 +5,16 @@
 #include <stdexcept>
 #include <algorithm>
 #include <string>
-
-typedef unsigned short BASE;
-typedef unsigned int DBASE;
-#define BASE_SIZE sizeof(BASE)*8
-
+#include <bigNum.hpp>
 
 using namespace std;
 
 
-class BN {
- public:
-    int len;
-    int maxlen;
-    BASE *coef;
-
-    explicit BN(int ml = 1, int t = 0);
-    BN(const BN&);
-    ~BN() {
-        if (coef){
-            delete[] coef;
-            coef = NULL;
-        }
-    };
-
-    BN(const BASE&);
-
-    BN& operator = (const BN&);
-    BN& operator = (const BASE&);
-
-    bool operator == (const BN&);
-    bool operator >= (const BN&);
-    bool operator <= (const BN&);
-    bool operator < (const BN&);
-    bool operator > (const BN&);
-    bool operator != (const BN&);
-
-    BN operator + (const BN&);
-    BN&  operator += (const BN&);
-    BN operator - (const BN&);
-    BN&  operator -= (const BN&);
-    BN operator * (const BASE&);
-    BN&  operator *= (const BASE&);
-    BN  operator * (const BN&);
-    BN&  operator *= (const BN&);
-    BN operator / (const BASE&);
-    BN operator % (const BASE&);
-    BN operator / (const BN&);
-    BN operator % (const BN&);
-    BN sqrt();
-
-    void cout_base10();
-    void cin_base10();
-
-    double to_double() const;
-    BN pow_mod(const BN& exponent, const BN& mod) const;
-
-    friend BN operator*(BASE num, BN bNum) {  return bNum*num; }
-
-    friend ostream& operator << (ostream &, const BN &);
-    friend istream& operator >> (istream &, BN &);
+BN::~BN() {
+    if (coef){
+        delete[] coef;
+        coef = NULL;
+    }
 };
 
 double BN::to_double() const {
@@ -95,6 +43,10 @@ BN BN::pow_mod(const BN& exponent, const BN& mod) const {
 
     return result;
 }
+
+BN::BN() : BN(1, 0) {
+
+};
 
 BN::BN(int ml, int t){
     maxlen = ml;
@@ -937,4 +889,79 @@ BN ret_z(BN m) {
     new_b.coef[2 * m.len] = 1;
     z = new_b / m;
     return z;
+}
+
+BN BN::square() {
+    BN res(2 * len);
+    int j;
+    DBASE cu = 0;
+    DBASE uv = 0;
+    BASE v = 0;
+    DBASE tmp = 0;
+    res.len = res.maxlen;
+    for (int i = 0; i < len; i++) {
+        uv = (DBASE)res.coef[2 * i] + (DBASE)coef[i] * (DBASE)coef[i];
+        res.coef[2 * i] = (BASE)uv;
+        cu = (uv >> BASE_SIZE);
+        for (j = i + 1; j < len; j++) {
+            tmp = static_cast<DBASE>(static_cast<DBASE>(static_cast<BASE>(res.coef[i + j]))
+                + static_cast<DBASE>(static_cast<BASE>(static_cast<DBASE>(coef[i])
+                    * static_cast<DBASE>(coef[j])) * 2)
+                + static_cast<DBASE>(static_cast<BASE>(cu)));
+
+            v = static_cast<BASE>(tmp);
+
+            cu = static_cast<DBASE>(static_cast<DBASE>((
+                static_cast<DBASE>(static_cast<DBASE>(coef[i])
+                    * static_cast<DBASE>(coef[j])) >> BASE_SIZE)
+                * static_cast<DBASE>(2))
+                + static_cast<DBASE>(static_cast<DBASE>(cu) >> BASE_SIZE)
+                + static_cast<DBASE>(static_cast<DBASE>(tmp) >> BASE_SIZE));
+
+            res.coef[i + j] = v;
+        }
+        res.coef[i + len] += static_cast<BASE>(cu);
+        res.coef[i + len + 1] += static_cast<BASE>(cu >> BASE_SIZE);
+    }
+
+    res.len = res.maxlen;
+    for (int i = 2 * len - 1; i > -1; i--) {
+        if (res.coef[i] == 0) {
+            res.len--;
+        }
+        else {
+            break;
+        }
+    }
+    return res;
+}
+
+BN BN::pow(int y) {
+    BN z;
+    int n = numberOfDigit(y),
+        mask = 1 << (n - 2);
+    z = *this;
+    for (int i = n - 2; i > -1; i--) {
+        z = z.square();
+        if (mask & y) {
+            z = z * *this;
+        }
+        mask >>= 1;
+    }
+    return z;
+}
+
+BN BN::root(int n) {
+    BN a = *this;
+    BN x0, x1 = a;
+    do {
+        x0 = x1;
+        x1 = (x0 * (n - 1) + a / x0.pow(n - 1)) * 1 / n;
+        // cout << x0.pow(n-1) << " pow " << n << " n\n";
+        // x0.cout_base10();
+        // cout << " x0\n";
+        // x1.cout_base10();
+        // cout << " x1\n";
+    } while (x0 > x1);
+    return x0;
 }
