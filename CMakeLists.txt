@@ -11,7 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories(${CMAKE_SOURCE_DIR}/deps/include)
 
 # Создаем список подпапок, в которых находятся main.cpp
-set(SUBDIRS 1 2 3 4 5)
+set(SUBDIRS 1 2 3 4 6)
 
 # Добавляем Google Test
 # include(FetchContent)
