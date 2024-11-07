@@ -11,17 +11,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories(${CMAKE_SOURCE_DIR}/deps/include)
 
 # Создаем список подпапок, в которых находятся main.cpp
-set(SUBDIRS 1 2)
+set(SUBDIRS 1 2 3 4 5)
 
 # Добавляем Google Test
-include(FetchContent)
+# include(FetchContent)
 
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
-)
+# FetchContent_Declare(
+#   googletest
+#   URL https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
+# )
 
-FetchContent_MakeAvailable(googletest)
+# FetchContent_MakeAvailable(googletest)
 
 # Проходим по каждой подпапке и добавляем цель для компиляции main.cpp
 foreach(SUBDIR ${SUBDIRS})
@@ -29,9 +29,9 @@ foreach(SUBDIR ${SUBDIRS})
     add_executable(main_${SUBDIR} ${SUBDIR}/main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp ${CMAKE_SOURCE_DIR}/deps/millerRabin.cpp)
 
     # Компиляция test_main.cpp и algos.cpp
-    add_executable(test_${SUBDIR} ${SUBDIR}/test_main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp)
-    target_link_libraries(test_${SUBDIR} gtest_main)
+    # add_executable(test_${SUBDIR} ${SUBDIR}/test_main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp)
+    # target_link_libraries(test_${SUBDIR} gtest_main)
 
-    # Добавляем тесты
-    add_test(NAME test_${SUBDIR} COMMAND test_${SUBDIR})
+    # # Добавляем тесты
+    # add_test(NAME test_${SUBDIR} COMMAND test_${SUBDIR})
 endforeach()

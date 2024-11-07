@@ -29,8 +29,8 @@ bool test_miller_rabin(BN n, int t) {
     BN zero, one, two, three;
     zero = 0; one = 1; two = 2; three = 3;
     if (n <= three) {
-        cout << "Test int must be more than 3" << endl;
-        return false;
+        std::cout << "Test int must be more than 3" << std::endl;
+        return true;
     }
     BN r = n - one;
     BN s = zero;

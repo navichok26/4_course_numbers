@@ -27,7 +27,7 @@ double BN::to_double() const {
     return result;
 }
 
-BN BN::pow_mod(const BN& exponent, const BN& mod) const {
+BN BN::pow_mod(BN& exponent, BN& mod) const {
     BN base = *this;
     BN result, zero, one, two;
     result = 1; zero = 0; one = 1; two = 2;
@@ -262,7 +262,7 @@ bool BN::operator <=(const BN& bNum) {
 BN BN::operator + (const BN& bNum) {
     int l = max(len, bNum.len) + 1;
     int t = min(len, bNum.len);
-    BN newNum(l);
+    BN newNum(l, 0);
     DBASE tmp;
     int j = 0;
     int k = 0;
@@ -309,7 +309,7 @@ BN BN::operator - (const BN& bNum) {
     DBASE k = 0;
     DBASE tmp;
     int b = BASE_SIZE;
-    BN newNum(len);
+    BN newNum(len, 0);
     while (j < bNum.len) {
         tmp = static_cast<DBASE>((static_cast<DBASE>(1) << (b)) |
         static_cast<DBASE>(coef[j]));
@@ -344,7 +344,7 @@ BN BN::operator * (const BASE& num) {
     int j = 0;
     BASE k = 0;
 
-    BN newNum(len+1);
+    BN newNum(len+1, 0);
     DBASE tmp;
     int b = BASE_SIZE;
 
@@ -371,7 +371,7 @@ BN& BN::operator *= (const BASE& num) {
 BN BN::operator * (const BN& bNum) {
     int j = 0;
 
-    BN newNum(len + bNum.len);
+    BN newNum(len + bNum.len, 0);
     DBASE tmp;
 
     int b = BASE_SIZE;
@@ -409,7 +409,7 @@ BN& BN::operator *= (const BN& bNum) {
 BN BN::operator / (const BASE& num) {
     int j = 0;
     DBASE tmp = 0;
-    BN newNum(len);
+    BN newNum(len, 0);
 
     BASE r = 0;
     int b = BASE_SIZE;
@@ -440,7 +440,7 @@ BN BN::operator % (const BASE& num) {
 
     BASE r = 0;
     int b = BASE_SIZE;
-    BN newNum(1);
+    BN newNum(1, 0);
     while (j < len) {
         tmp = ((static_cast<DBASE>(r) << b) +
         static_cast<DBASE>(coef[len-1-j]));
@@ -470,7 +470,7 @@ BN BN::operator % (const BASE& num) {
 
 void BN::cout_base10() {
     BN newNun = *this;
-    BN zero(newNun.len);
+    BN zero(newNun.len, 0);
     string s;
     zero.len = newNun.len;
     while (newNun != zero) {
@@ -500,7 +500,7 @@ void BN::cin_base10() {
     int b = BASE_SIZE;
 
     // Рассчитываем длину нового объекта BN
-    BN bNum((k - 1) / (b / 4) + 1);
+    BN bNum((k - 1) / (b / 4) + 1, 0);
 
     while (j < k) {
         // Проверяем, что символы являются цифрами
@@ -530,7 +530,7 @@ BN BN::operator / (const BN& num) {
         throw invalid_argument("Invalid arguments1.");
     }
     if (*this < num) {
-        BN finNum(1);
+        BN finNum(1, 0);
         return finNum;
     }
 
@@ -551,7 +551,7 @@ BN BN::operator / (const BN& num) {
     BN delNum = num;
     delNum *= d;
 
-    BN finNum(m+1);
+    BN finNum(m+1, 0);
     finNum.len = m+1;
 
     if (newNum.len == len) {
@@ -597,7 +597,7 @@ BN BN::operator / (const BN& num) {
             }
         }
 
-        BN u(delNum.len + 1);
+        BN u(delNum.len + 1, 0);
         u.len = delNum.len + 1;
         for (int i = 0; i < delNum.len + 1; i++) {
             u.coef[i] = newNum.coef[j+i];
@@ -689,7 +689,7 @@ BN BN::operator % (const BN& num) {
                 }
             }
         }
-        BN u(delNum.len + 1);
+        BN u(delNum.len + 1, 0);
         u.len = delNum.len + 1;
         for (int i = 0; i < delNum.len + 1; i++) {
             u.coef[i] = newNum.coef[j+i];
@@ -756,7 +756,7 @@ BN BN::sqrt()
 
 BN square(BN num) 
 {
-    BN res(2 * num.len);
+    BN res(2 * num.len, 0);
     int j;
     DBASE cu = 0;
     DBASE uv = 0;
@@ -809,7 +809,7 @@ int numberOfDigit(int y) {
     return n;
 }
 
-BN pow(BN num, int y) {
+BN pow_bn_static(BN num, int y) {
     BN z;
     int n = numberOfDigit(y),
     mask = 1 << (n-2);
@@ -829,7 +829,7 @@ BN shift(BN num, int k) {
         BN shift_num(k);
         return shift_num;
     }
-    BN shift_num(num.len-k);
+    BN shift_num(num.len-k, 0);
     shift_num.len = shift_num.maxlen;
     for (int i = 0; i < num.len - k; i++)
         shift_num.coef[i] = num.coef[i+k];
@@ -840,7 +840,7 @@ BN rem(BN number, int k) {
     if (k >= number.len) {
         return number;
     }
-    BN rem(k);
+    BN rem(k, 0);
     rem.len = rem.maxlen;
     for (int i = 0; i < rem.len; i++) {
         rem.coef[i] = number.coef[i];
@@ -859,7 +859,7 @@ BN BarrettReduction(BN num, BN m, BN z) {
     if (num.len > 2 * m.len) {
         throw invalid_argument("Invalid arguments. Module too small.");
     }
-    BN q1, b(2), r1, r2, rm;
+    BN q1, b(2, 0), r1, r2, rm;
     b.len = b.maxlen;
     b.coef[1] = 1;
     q1 = (shift(num, m.len - 1) * z);
@@ -869,7 +869,7 @@ BN BarrettReduction(BN num, BN m, BN z) {
     if (r1 >= r2) {
         rm = r1-r2;
     } else {
-        BN new_b(2 * m.len +1 + b.len - 1);
+        BN new_b(2 * m.len +1 + b.len - 1, 0);
         new_b.len = new_b.maxlen;
         new_b.coef[2 * m.len + 2] = 1;
         rm = new_b + r1 - r2;
@@ -881,10 +881,10 @@ BN BarrettReduction(BN num, BN m, BN z) {
 }
 
 BN ret_z(BN m) {
-    BN b(2), z;
+    BN b(2, 0), z;
     b.len = b.maxlen;
     b.coef[1] = 1;
-    BN new_b(2 * m.len + b.len - 1);
+    BN new_b(2 * m.len + b.len - 1, 0);
     new_b.len = new_b.maxlen;
     new_b.coef[2 * m.len] = 1;
     z = new_b / m;
@@ -892,7 +892,7 @@ BN ret_z(BN m) {
 }
 
 BN BN::square() {
-    BN res(2 * len);
+    BN res(2 * len, 0);
     int j;
     DBASE cu = 0;
     DBASE uv = 0;
@@ -936,7 +936,7 @@ BN BN::square() {
     return res;
 }
 
-BN BN::pow(int y) {
+BN BN::pow_bn(int y) {
     BN z;
     int n = numberOfDigit(y),
         mask = 1 << (n - 2);
@@ -956,12 +956,55 @@ BN BN::root(int n) {
     BN x0, x1 = a;
     do {
         x0 = x1;
-        x1 = (x0 * (n - 1) + a / x0.pow(n - 1)) * 1 / n;
-        // cout << x0.pow(n-1) << " pow " << n << " n\n";
-        // x0.cout_base10();
-        // cout << " x0\n";
-        // x1.cout_base10();
-        // cout << " x1\n";
+        x1 = (x0 * (n - 1) + a / x0.pow_bn(n - 1)) * 1 / n;
     } while (x0 > x1);
     return x0;
+}
+
+BN BN::gcd(const BN& b) {
+    BN x = *this;
+    BN y = b;
+
+    while (y != 0) {
+        BN temp = y;
+        y = x % y;
+        x = temp;
+    }
+
+    return x;
+}
+
+BN BN::random_bound(BN a, BN b) {
+    if (a > b) {
+        throw invalid_argument("Invalid range: a must be less than or equal to b.");
+    }
+
+    BN range = b - a;
+
+    int max_len = range.len;
+    BN random_number(max_len, 1);
+
+    while (random_number > range) {
+        random_number = BN(max_len, 1);
+    }
+
+    return a + random_number;
+}
+
+int BN::log_bn(BN q) {
+    BN one;
+    one = 1;
+    if (*this <= 0 || q <= one) {
+        throw invalid_argument("Invalid arguments: n must be positive and q must be greater than 1.");
+    }
+
+    int result = 0;
+    BN temp = *this;
+
+    while (temp >= q) {
+        temp = temp / q;
+        result += 1;
+    }
+
+    return result;
 }

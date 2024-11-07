@@ -18,10 +18,10 @@ int main()
         return EXIT_FAILURE;
     }
 
-    if (test_miller_rabin(num, 15)) 
+    if (test_miller_rabin(num, 5)) 
     {
         std::cout << "Miller Rabin: number is prime\n";
-        error_phi(num, 15);
+        error_phi(num, 5);
 
         return EXIT_FAILURE; 
     } else {
