@@ -1,7 +1,8 @@
 #include "algos.hpp"
 #include <cmath>
 
-int Gelfonds_algorithm(BN g, BN p, int n, BN a) {
+int Gelfonds_algorithm(BN g, int p, BN a) {
+  int n = p - 1;
   int h = sqrt(n) + 1;
   BN b = g.pow_bn(h) % p;
 

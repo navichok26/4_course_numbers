@@ -11,7 +11,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories(${CMAKE_SOURCE_DIR}/deps/include)
 
 # Создаем список подпапок, в которых находятся main.cpp
-set(SUBDIRS 1 2 3 4 6)
+set(SUBDIRS 1 2 3 4 5 6)
+
+# Добавляем подмодуль Google Test
+add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)
+
+# Добавляем тесты
+enable_testing()
 
 # Добавляем Google Test
 # include(FetchContent)
@@ -29,9 +35,9 @@ foreach(SUBDIR ${SUBDIRS})
     add_executable(main_${SUBDIR} ${SUBDIR}/main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp ${CMAKE_SOURCE_DIR}/deps/millerRabin.cpp)
 
     # Компиляция test_main.cpp и algos.cpp
-    # add_executable(test_${SUBDIR} ${SUBDIR}/test_main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp)
-    # target_link_libraries(test_${SUBDIR} gtest_main)
+    add_executable(test_${SUBDIR} ${SUBDIR}/test_main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp)
+    target_link_libraries(test_${SUBDIR} gtest_main)
 
     # # Добавляем тесты
-    # add_test(NAME test_${SUBDIR} COMMAND test_${SUBDIR})
+    add_test(NAME test_${SUBDIR} COMMAND test_${SUBDIR})
 endforeach()
