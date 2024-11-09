@@ -7,27 +7,20 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_compile_definitions(__cpp_concepts=202002L)
+
 # Добавляем файл BigNums.h в список включаемых директорий
 include_directories(${CMAKE_SOURCE_DIR}/deps/include)
 
 # Создаем список подпапок, в которых находятся main.cpp
-set(SUBDIRS 1 2 3 4 5 6)
+set(SUBDIRS 7)
+
 
 # Добавляем подмодуль Google Test
 add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)
 
 # Добавляем тесты
 enable_testing()
-
-# Добавляем Google Test
-# include(FetchContent)
-
-# FetchContent_Declare(
-#   googletest
-#   URL https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
-# )
-
-# FetchContent_MakeAvailable(googletest)
 
 # Проходим по каждой подпапке и добавляем цель для компиляции main.cpp
 foreach(SUBDIR ${SUBDIRS})

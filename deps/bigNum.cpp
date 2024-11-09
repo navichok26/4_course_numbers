@@ -1,36 +1,43 @@
-#include <ctime>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
+
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
-#include <algorithm>
 #include <string>
+
 #include <bigNum.hpp>
 
 using namespace std;
 
-
-BN::~BN() {
-    if (coef){
+BN::~BN()
+{
+    if (coef) {
         delete[] coef;
         coef = NULL;
     }
 };
 
-double BN::to_double() const {
+double BN::to_double() const
+{
     double result = 0;
     double base = 1;
     for (int i = 0; i < len; i++) {
         result += coef[i] * base;
-        base *= 10; // Увеличиваем базу (если коэффициенты - цифры)
+        base *= 10;  // Увеличиваем базу (если коэффициенты - цифры)
     }
     return result;
 }
 
-BN BN::pow_mod(BN& exponent, BN& mod) const {
+BN BN::pow_mod(BN &exponent, BN &mod) const
+{
     BN base = *this;
     BN result, zero, one, two;
-    result = 1; zero = 0; one = 1; two = 2;
+    result = 1;
+    zero = 0;
+    one = 1;
+    two = 2;
     BN exp = exponent;
 
     while (exp > zero) {
@@ -44,11 +51,13 @@ BN BN::pow_mod(BN& exponent, BN& mod) const {
     return result;
 }
 
-BN::BN() : BN(1, 0) {
+BN::BN()
+    : BN(1, 0){
 
-};
+      };
 
-BN::BN(int ml, int t){
+BN::BN(int ml, int t)
+{
     maxlen = ml;
     coef = new BASE[maxlen];
     len = 1;
@@ -66,7 +75,7 @@ BN::BN(int ml, int t){
                 coef[i] = coef[i] << (j * 12) | rand();
             }
         }
-        while (len > 1 && coef[len-1] == 0) {
+        while (len > 1 && coef[len - 1] == 0) {
             len--;
         }
     } else if (t != 0) {
@@ -74,14 +83,16 @@ BN::BN(int ml, int t){
     }
 };
 
-BN::BN(const BASE& num) {
+BN::BN(const BASE &num)
+{
     maxlen = 1;
     len = 1;
     coef = new BASE[maxlen];
     coef[0] = num;
 };
 
-BN::BN(const BN& bNum){
+BN::BN(const BN &bNum)
+{
     maxlen = bNum.maxlen;
     len = bNum.len;
     coef = new BASE[maxlen];
@@ -90,7 +101,8 @@ BN::BN(const BN& bNum){
     }
 };
 
-BN& BN::operator = (const BN& bNum) {
+BN &BN::operator=(const BN &bNum)
+{
     if (this != &bNum) {
         maxlen = bNum.maxlen;
         len = bNum.len;
@@ -102,9 +114,10 @@ BN& BN::operator = (const BN& bNum) {
     return *this;
 };
 
-BN& BN::operator = (const BASE& num) {
+BN &BN::operator=(const BASE &num)
+{
     if (len == 1 && coef[0] != num) {
-        delete[]coef;
+        delete[] coef;
         maxlen = 1;
         len = 1;
         coef = new BASE[maxlen];
@@ -113,7 +126,8 @@ BN& BN::operator = (const BASE& num) {
     return *this;
 };
 
-ostream& operator<<(ostream& out, const BN& bNum) {
+ostream &operator<<(ostream &out, const BN &bNum)
+{
     int b = BASE_SIZE;
     int k = b - 4;
     int j = bNum.len - 1;
@@ -137,15 +151,16 @@ ostream& operator<<(ostream& out, const BN& bNum) {
     return out;
 }
 
-istream& operator >> (istream &in, BN & bNum) {
-    char* s = new char[1000];
+istream &operator>>(istream &in, BN &bNum)
+{
+    char *s = new char[1000];
     int b = BASE_SIZE;
     int j = 0;
     int k = 0;
     unsigned int tmp = 0;
 
     in.getline(s, 1000);
-    bNum.len = (strlen(s)-1)/(b/4)+1;
+    bNum.len = (strlen(s) - 1) / (b / 4) + 1;
     bNum.maxlen = bNum.len;
     bNum.coef = new BASE[bNum.maxlen];
     for (int i = strlen(s) - 1; i > -1; i--) {
@@ -169,7 +184,8 @@ istream& operator >> (istream &in, BN & bNum) {
     return in;
 }
 
-bool BN::operator==(const BN& bNum) {
+bool BN::operator==(const BN &bNum)
+{
     if (len != bNum.len) {
         return false;
     }
@@ -182,7 +198,8 @@ bool BN::operator==(const BN& bNum) {
     return true;
 }
 
-bool BN::operator!=(const BN& bNum) {
+bool BN::operator!=(const BN &bNum)
+{
     if (len != bNum.len) {
         return true;
     }
@@ -195,7 +212,8 @@ bool BN::operator!=(const BN& bNum) {
     return false;
 }
 
-bool BN::operator <(const BN& bNum) {
+bool BN::operator<(const BN &bNum)
+{
     if (len < bNum.len) {
         return true;
     } else if (len > bNum.len) {
@@ -211,7 +229,8 @@ bool BN::operator <(const BN& bNum) {
     return false;
 }
 
-bool BN::operator > (const BN& bNum) {
+bool BN::operator>(const BN &bNum)
+{
     if (len > bNum.len) {
         return true;
     } else if (len < bNum.len) {
@@ -227,7 +246,8 @@ bool BN::operator > (const BN& bNum) {
     return false;
 }
 
-bool BN::operator >= (const BN& bNum) {
+bool BN::operator>=(const BN &bNum)
+{
     if (len > bNum.len) {
         return true;
     } else if (len < bNum.len) {
@@ -243,7 +263,8 @@ bool BN::operator >= (const BN& bNum) {
     return true;
 }
 
-bool BN::operator <=(const BN& bNum) {
+bool BN::operator<=(const BN &bNum)
+{
     if (len < bNum.len) {
         return true;
     } else if (len > bNum.len) {
@@ -259,7 +280,8 @@ bool BN::operator <=(const BN& bNum) {
     return true;
 }
 
-BN BN::operator + (const BN& bNum) {
+BN BN::operator+(const BN &bNum)
+{
     int l = max(len, bNum.len) + 1;
     int t = min(len, bNum.len);
     BN newNum(l, 0);
@@ -268,8 +290,7 @@ BN BN::operator + (const BN& bNum) {
     int k = 0;
     int b = BASE_SIZE;
     while (j < t) {
-        tmp = static_cast<DBASE>(coef[j]) +
-        static_cast<DBASE>(bNum.coef[j]) + static_cast<DBASE>(k);
+        tmp = static_cast<DBASE>(coef[j]) + static_cast<DBASE>(bNum.coef[j]) + static_cast<DBASE>(k);
         newNum.coef[j] = static_cast<BASE>(tmp);
         k = static_cast<BASE>(tmp >> b);
         j++;
@@ -288,21 +309,23 @@ BN BN::operator + (const BN& bNum) {
         j++;
     }
     newNum.coef[j] = k;
-    newNum.len = j+1;
-    while (newNum.len > 1 && newNum.coef[newNum.len-1] == 0) {
+    newNum.len = j + 1;
+    while (newNum.len > 1 && newNum.coef[newNum.len - 1] == 0) {
         newNum.len--;
     }
     return newNum;
 }
 
-BN& BN::operator += (const BN& bNum) {
+BN &BN::operator+=(const BN &bNum)
+{
     *this = *this + bNum;
     return *this;
 }
 
-BN BN::operator - (const BN& bNum) {
+BN BN::operator-(const BN &bNum)
+{
     if (*this < bNum) {
-        throw invalid_argument("Invalid arguments.");
+        throw invalid_argument("Invalid arguments. for -");
     }
 
     int j = 0;
@@ -311,10 +334,8 @@ BN BN::operator - (const BN& bNum) {
     int b = BASE_SIZE;
     BN newNum(len, 0);
     while (j < bNum.len) {
-        tmp = static_cast<DBASE>((static_cast<DBASE>(1) << (b)) |
-        static_cast<DBASE>(coef[j]));
-        tmp = static_cast<DBASE>(static_cast<DBASE>(tmp) -
-        static_cast<DBASE>(bNum.coef[j]) - static_cast<DBASE>(k));
+        tmp = static_cast<DBASE>((static_cast<DBASE>(1) << (b)) | static_cast<DBASE>(coef[j]));
+        tmp = static_cast<DBASE>(static_cast<DBASE>(tmp) - static_cast<DBASE>(bNum.coef[j]) - static_cast<DBASE>(k));
         newNum.coef[j] = static_cast<BASE>(tmp);
         k = !(tmp >> b);
 
@@ -329,46 +350,68 @@ BN BN::operator - (const BN& bNum) {
     }
 
     newNum.len = len;
-    while (newNum.len > 1 && newNum.coef[newNum.len-1] == 0) {
+    while (newNum.len > 1 && newNum.coef[newNum.len - 1] == 0) {
         newNum.len--;
     }
     return newNum;
 }
 
-BN& BN::operator -= (const BN& bNum) {
+BN &BN::operator-=(const BN &bNum)
+{
     *this = *this - bNum;
     return *this;
 }
 
-BN BN::operator * (const BASE& num) {
+BN BN::operator*(const BASE &num)
+{
     int j = 0;
     BASE k = 0;
 
-    BN newNum(len+1, 0);
+    BN newNum(len + 1, 0);
     DBASE tmp;
     int b = BASE_SIZE;
 
     while (j < len) {
-        tmp = static_cast<DBASE>(static_cast<DBASE>(coef[j]) *
-        static_cast<DBASE>(num) + static_cast<DBASE>(k));
+        tmp = static_cast<DBASE>(static_cast<DBASE>(coef[j]) * static_cast<DBASE>(num) + static_cast<DBASE>(k));
         newNum.coef[j] = static_cast<BASE>(tmp);
         k = static_cast<BASE>((tmp) >> (b));
         j++;
     }
     newNum.coef[j] = k;
     newNum.len = len + 1;
-    while (newNum.len > 1 && newNum.coef[newNum.len-1] == 0) {
+    while (newNum.len > 1 && newNum.coef[newNum.len - 1] == 0) {
         newNum.len--;
     }
     return newNum;
 }
 
-BN& BN::operator *= (const BASE& num) {
+BN BN::mod_sub(const BN &other, int modulus)
+{
+    BN result = *this;
+
+    // Если result меньше other, добавляем modulus
+    while (result < other) {
+        result = result + modulus;
+    }
+
+    // Вычитаем other
+    result = result - other;
+
+    // Берем остаток от деления на modulus
+    while (result >= modulus) {
+        result = result - modulus;
+    }
+    return result;
+}
+
+BN &BN::operator*=(const BASE &num)
+{
     *this = *this * num;
     return *this;
 }
 
-BN BN::operator * (const BN& bNum) {
+BN BN::operator*(const BN &bNum)
+{
     int j = 0;
 
     BN newNum(len + bNum.len, 0);
@@ -381,32 +424,32 @@ BN BN::operator * (const BN& bNum) {
             BASE k = 0;
             int i = 0;
             while (i < len) {
-                tmp = static_cast<DBASE>(static_cast<DBASE>(
-                    static_cast<DBASE>(coef[i]) *
-                    static_cast<DBASE>(bNum.coef[j])) +
-                    static_cast<DBASE>(newNum.coef[i+j]) +
-                    static_cast<DBASE>(k));
-                newNum.coef[i+j] = static_cast<BASE>(tmp);
+                tmp = static_cast<DBASE>(
+                    static_cast<DBASE>(static_cast<DBASE>(coef[i]) * static_cast<DBASE>(bNum.coef[j]))
+                    + static_cast<DBASE>(newNum.coef[i + j]) + static_cast<DBASE>(k));
+                newNum.coef[i + j] = static_cast<BASE>(tmp);
                 k = static_cast<BASE>(tmp >> (b));
                 i++;
             }
-            newNum.coef[len+j] = k;
+            newNum.coef[len + j] = k;
         }
         j++;
     }
     newNum.len = len + bNum.len;
-    while (newNum.len > 1 && newNum.coef[newNum.len-1] == 0) {
+    while (newNum.len > 1 && newNum.coef[newNum.len - 1] == 0) {
         newNum.len--;
     }
     return newNum;
 }
 
-BN& BN::operator *= (const BN& bNum) {
+BN &BN::operator*=(const BN &bNum)
+{
     *this = *this * bNum;
     return *this;
 }
 
-BN BN::operator / (const BASE& num) {
+BN BN::operator/(const BASE &num)
+{
     int j = 0;
     DBASE tmp = 0;
     BN newNum(len, 0);
@@ -415,25 +458,23 @@ BN BN::operator / (const BASE& num) {
     int b = BASE_SIZE;
 
     while (j < len) {
-        tmp = static_cast<DBASE>((static_cast<DBASE>(r) << (b)) +
-        static_cast<DBASE>(coef[len-1-j]));
+        tmp = static_cast<DBASE>((static_cast<DBASE>(r) << (b)) + static_cast<DBASE>(coef[len - 1 - j]));
 
-        newNum.coef[len-1-j] = static_cast<BASE>(static_cast<DBASE>(tmp) /
-        static_cast<DBASE>(num));
-        r = static_cast<BASE>(static_cast<DBASE>(tmp) %
-        static_cast<DBASE>(num));
+        newNum.coef[len - 1 - j] = static_cast<BASE>(static_cast<DBASE>(tmp) / static_cast<DBASE>(num));
+        r = static_cast<BASE>(static_cast<DBASE>(tmp) % static_cast<DBASE>(num));
         j++;
     }
 
     newNum.len = len;
-    while (newNum.len > 1 && newNum.coef[newNum.len-1] == 0) {
+    while (newNum.len > 1 && newNum.coef[newNum.len - 1] == 0) {
         newNum.len--;
     }
 
     return newNum;
 }
 
-BN BN::operator % (const BASE& num) {
+BN BN::operator%(const BASE &num)
+{
     int j = 0;
 
     DBASE tmp = 0;
@@ -442,8 +483,7 @@ BN BN::operator % (const BASE& num) {
     int b = BASE_SIZE;
     BN newNum(1, 0);
     while (j < len) {
-        tmp = ((static_cast<DBASE>(r) << b) +
-        static_cast<DBASE>(coef[len-1-j]));
+        tmp = ((static_cast<DBASE>(r) << b) + static_cast<DBASE>(coef[len - 1 - j]));
         r = static_cast<BASE>(tmp % static_cast<DBASE>(num));
         j++;
     }
@@ -468,13 +508,14 @@ BN BN::operator % (const BASE& num) {
 //     cout << "Base10: " << s << endl;
 // }
 
-void BN::cout_base10() {
+void BN::cout_base10()
+{
     BN newNun = *this;
     BN zero(newNun.len, 0);
     string s;
     zero.len = newNun.len;
     while (newNun != zero) {
-        BN t = newNun%10;
+        BN t = newNun % 10;
         s.push_back(t.coef[0] + '0');
 
         newNun = newNun / 10;
@@ -484,12 +525,12 @@ void BN::cout_base10() {
     std::cout << "" << s;
 }
 
-void BN::cin_base10() {
+void BN::cin_base10()
+{
     int j = 0;
     string s;
     std::cout << "Base10: ";
     getline(cin, s);
-    
 
     int k = s.length();
     // std::cout << "Length of input: " << k << endl;
@@ -525,9 +566,10 @@ void BN::cin_base10() {
     *this = bNum;
 }
 
-BN BN::operator / (const BN& num) {
+BN BN::operator/(const BN &num)
+{
     if (num.len == 1 && num.coef[0] == 0) {
-        throw invalid_argument("Invalid arguments1.");
+        throw invalid_argument("Invalid arguments1. for /");
     }
     if (*this < num) {
         BN finNum(1, 0);
@@ -541,8 +583,8 @@ BN BN::operator / (const BN& num) {
     int m = len - num.len;
     int base_size = BASE_SIZE;
     DBASE b = (static_cast<DBASE>(1) << base_size);
-    BASE d = static_cast<BASE>(static_cast<DBASE>(b) /
-    static_cast<DBASE>((num.coef[num.len-1]) + static_cast<BASE>(1)));
+    BASE d =
+        static_cast<BASE>(static_cast<DBASE>(b) / static_cast<DBASE>((num.coef[num.len - 1]) + static_cast<BASE>(1)));
     int j = m;
     int k = 0;
 
@@ -551,47 +593,44 @@ BN BN::operator / (const BN& num) {
     BN delNum = num;
     delNum *= d;
 
-    BN finNum(m+1, 0);
-    finNum.len = m+1;
+    BN finNum(m + 1, 0);
+    finNum.len = m + 1;
 
     if (newNum.len == len) {
         newNum.maxlen++;
         newNum.len = maxlen;
         newNum.coef = new BASE[maxlen];
-        for (int i = 0; i <  len; i++) {
+        for (int i = 0; i < len; i++) {
             newNum.coef[i] = coef[i];
         }
         newNum *= d;
         newNum.len++;
-        newNum.coef[newNum.len-1] = 0;
+        newNum.coef[newNum.len - 1] = 0;
     }
 
     while (j > -1) {
-        DBASE q = static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(
-            static_cast<DBASE>(newNum.coef[j + delNum.len]) *
-            static_cast<DBASE>(b)) +
-            static_cast<DBASE>(newNum.coef[j + delNum.len - 1])) /
-            static_cast<DBASE>(delNum.coef[delNum.len - 1]));
-        DBASE r = static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>
-        (static_cast<DBASE>(newNum.coef[j + delNum.len]) *
-        static_cast<DBASE>(b)) + static_cast<DBASE>(
-            newNum.coef[j + delNum.len - 1])) %
-            static_cast<DBASE>(delNum.coef[delNum.len - 1]));
+        DBASE q =
+            static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(newNum.coef[j + delNum.len])
+                                                                     * static_cast<DBASE>(b))
+                                                  + static_cast<DBASE>(newNum.coef[j + delNum.len - 1]))
+                               / static_cast<DBASE>(delNum.coef[delNum.len - 1]));
+        DBASE r =
+            static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(newNum.coef[j + delNum.len])
+                                                                     * static_cast<DBASE>(b))
+                                                  + static_cast<DBASE>(newNum.coef[j + delNum.len - 1]))
+                               % static_cast<DBASE>(delNum.coef[delNum.len - 1]));
 
-        if (q == b || static_cast<DBASE>(static_cast<DBASE>(q) *
-        static_cast<DBASE>(delNum.coef[delNum.len-2])) >
-        static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(b) *
-        static_cast<DBASE>(r)) +
-        static_cast<DBASE>(newNum.coef[j+delNum.len-2]))) {
+        if (q == b
+            || static_cast<DBASE>(static_cast<DBASE>(q) * static_cast<DBASE>(delNum.coef[delNum.len - 2]))
+                   > static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(b) * static_cast<DBASE>(r))
+                                        + static_cast<DBASE>(newNum.coef[j + delNum.len - 2]))) {
             q--;
-            r = static_cast<DBASE>(r) +
-            static_cast<DBASE>(delNum.coef[delNum.len - 1]);
+            r = static_cast<DBASE>(r) + static_cast<DBASE>(delNum.coef[delNum.len - 1]);
             if (static_cast<DBASE>(r) < b) {
-                if (q == b || static_cast<DBASE>(static_cast<DBASE>(q) *
-                static_cast<DBASE>(delNum.coef[delNum.len-2])) >
-                static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(b) *
-                static_cast<DBASE>(r)) +
-                static_cast<DBASE>(newNum.coef[j+delNum.len-2]))) {
+                if (q == b
+                    || static_cast<DBASE>(static_cast<DBASE>(q) * static_cast<DBASE>(delNum.coef[delNum.len - 2]))
+                           > static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(b) * static_cast<DBASE>(r))
+                                                + static_cast<DBASE>(newNum.coef[j + delNum.len - 2]))) {
                     q--;
                 }
             }
@@ -600,7 +639,7 @@ BN BN::operator / (const BN& num) {
         BN u(delNum.len + 1, 0);
         u.len = delNum.len + 1;
         for (int i = 0; i < delNum.len + 1; i++) {
-            u.coef[i] = newNum.coef[j+i];
+            u.coef[i] = newNum.coef[j + i];
         }
 
         if (u < static_cast<BASE>(q) * delNum) {
@@ -611,22 +650,23 @@ BN BN::operator / (const BN& num) {
         finNum.coef[j] = static_cast<BASE>(q);
 
         for (int i = 0; i < delNum.len + 1; i++) {
-            newNum.coef[j+i] = u.coef[i];
+            newNum.coef[j + i] = u.coef[i];
         }
 
         j--;
     }
 
-    while (finNum.len > 1 && finNum.coef[finNum.len-1] == 0) {
+    while (finNum.len > 1 && finNum.coef[finNum.len - 1] == 0) {
         finNum.len--;
     }
 
     return finNum;
 }
 
-BN BN::operator % (const BN& num) {
+BN BN::operator%(const BN &num)
+{
     if (num.len == 1 && num.coef[0] == 0) {
-        throw invalid_argument("Invalid arguments.");
+        throw invalid_argument("Invalid arguments. for %");
     }
     if (*this < num) {
         return *this;
@@ -636,11 +676,11 @@ BN BN::operator % (const BN& num) {
         return *this % num.coef[0];
     }
 
-    int m = len-num.len;
+    int m = len - num.len;
     int base_size = BASE_SIZE;
     DBASE b = (static_cast<DBASE>(1) << (base_size));
-    BASE d =  static_cast<BASE>(static_cast<DBASE>(b) /
-    static_cast<DBASE>((num.coef[num.len-1]) + static_cast<BASE>(1)));
+    BASE d =
+        static_cast<BASE>(static_cast<DBASE>(b) / static_cast<DBASE>((num.coef[num.len - 1]) + static_cast<BASE>(1)));
     int j = m;
     int k = 0;
 
@@ -652,39 +692,36 @@ BN BN::operator % (const BN& num) {
         newNum.maxlen++;
         newNum.len = maxlen;
         newNum.coef = new BASE[maxlen];
-        for (int i = 0; i <  len; i++) {
+        for (int i = 0; i < len; i++) {
             newNum.coef[i] = coef[i];
         }
         newNum *= d;
         newNum.len++;
-        newNum.coef[newNum.len-1] = 0;
+        newNum.coef[newNum.len - 1] = 0;
     }
 
     while (j > -1) {
-        DBASE q = static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(
-            static_cast<DBASE>(newNum.coef[j + delNum.len]) *
-            static_cast<DBASE>(b)) +
-            static_cast<DBASE>(newNum.coef[j + delNum.len - 1])) /
-            static_cast<DBASE>(delNum.coef[delNum.len - 1]));
-        DBASE r = static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(
-            static_cast<DBASE>(newNum.coef[j + delNum.len]) *
-            static_cast<DBASE>(b)) +
-            static_cast<DBASE>(newNum.coef[j + delNum.len - 1])) %
-            static_cast<DBASE>(delNum.coef[delNum.len - 1]));
-        if (q == b || static_cast<DBASE>(static_cast<DBASE>(q) *
-        static_cast<DBASE>(delNum.coef[delNum.len-2])) >
-        static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(b) *
-        static_cast<DBASE>(r)) +
-        static_cast<DBASE>(newNum.coef[j+delNum.len-2]))) {
+        DBASE q =
+            static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(newNum.coef[j + delNum.len])
+                                                                     * static_cast<DBASE>(b))
+                                                  + static_cast<DBASE>(newNum.coef[j + delNum.len - 1]))
+                               / static_cast<DBASE>(delNum.coef[delNum.len - 1]));
+        DBASE r =
+            static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(newNum.coef[j + delNum.len])
+                                                                     * static_cast<DBASE>(b))
+                                                  + static_cast<DBASE>(newNum.coef[j + delNum.len - 1]))
+                               % static_cast<DBASE>(delNum.coef[delNum.len - 1]));
+        if (q == b
+            || static_cast<DBASE>(static_cast<DBASE>(q) * static_cast<DBASE>(delNum.coef[delNum.len - 2]))
+                   > static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(b) * static_cast<DBASE>(r))
+                                        + static_cast<DBASE>(newNum.coef[j + delNum.len - 2]))) {
             q--;
-            r = static_cast<DBASE>(r) +
-            static_cast<DBASE>(delNum.coef[delNum.len - 1]);
+            r = static_cast<DBASE>(r) + static_cast<DBASE>(delNum.coef[delNum.len - 1]);
             if (static_cast<DBASE>(r) < b) {
-                if (q == b || static_cast<DBASE>(static_cast<DBASE>(q) *
-                static_cast<DBASE>(delNum.coef[delNum.len-2])) >
-                static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(b) *
-                static_cast<DBASE>(r)) +
-                static_cast<DBASE>(newNum.coef[j+delNum.len-2]))) {
+                if (q == b
+                    || static_cast<DBASE>(static_cast<DBASE>(q) * static_cast<DBASE>(delNum.coef[delNum.len - 2]))
+                           > static_cast<DBASE>(static_cast<DBASE>(static_cast<DBASE>(b) * static_cast<DBASE>(r))
+                                                + static_cast<DBASE>(newNum.coef[j + delNum.len - 2]))) {
                     q--;
                 }
             }
@@ -692,7 +729,7 @@ BN BN::operator % (const BN& num) {
         BN u(delNum.len + 1, 0);
         u.len = delNum.len + 1;
         for (int i = 0; i < delNum.len + 1; i++) {
-            u.coef[i] = newNum.coef[j+i];
+            u.coef[i] = newNum.coef[j + i];
         }
 
         if (u < static_cast<BASE>(q) * delNum) {
@@ -702,18 +739,19 @@ BN BN::operator % (const BN& num) {
         u = u - (static_cast<BASE>(q) * delNum);
 
         for (int i = 0; i < delNum.len + 1; i++) {
-            newNum.coef[j+i] = u.coef[i];
+            newNum.coef[j + i] = u.coef[i];
         }
 
         j--;
     }
-    while (newNum.len > 1 && newNum.coef[newNum.len-1] == 0) {
+    while (newNum.len > 1 && newNum.coef[newNum.len - 1] == 0) {
         newNum.len--;
     }
     return newNum / d;
 }
 
-void test() {
+void test()
+{
     int M = 1000;
     int T = 1000;
     srand(time(NULL));
@@ -722,8 +760,8 @@ void test() {
     BN C;
     BN D;
     do {
-        int n = rand()%M + 1;
-        int m = rand()%M + 1;
+        int n = rand() % M + 1;
+        int m = rand() % M + 1;
         BN E(n, 1);
         BN G(m, 1);
         A = E;
@@ -733,8 +771,7 @@ void test() {
         std::cout << "m: " << m << " ";
         std::cout << "n: " << n << " ";
         std::cout << "T: " << T << endl;
-    }
-    while (A == C * B + D && A - D == C*B && D < B && --T);
+    } while (A == C * B + D && A - D == C * B && D < B && --T);
     std::cout << T << endl;
 }
 
@@ -746,15 +783,14 @@ BN BN::sqrt()
     zero = 0;
     BN x = a;
     x0 = x + one;
-    while (x < x0)
-    {
+    while (x < x0) {
         x0 = x;
         x = ((a / x) + x) / 2;
     }
     return x0;
 }
 
-BN square(BN num) 
+BN square(BN num)
 {
     BN res(2 * num.len, 0);
     int j;
@@ -764,23 +800,24 @@ BN square(BN num)
     DBASE tmp = 0;
     res.len = res.maxlen;
     for (int i = 0; i < num.len; i++) {
-        uv = (DBASE)res.coef[2 * i] + (DBASE)num.coef[i] * (DBASE)num.coef[i];
-        res.coef[2 * i] = (BASE)uv;
+        uv = (DBASE) res.coef[2 * i] + (DBASE) num.coef[i] * (DBASE) num.coef[i];
+        res.coef[2 * i] = (BASE) uv;
         cu = (uv >> BASE_SIZE);
         for (j = i + 1; j < num.len; j++) {
-            tmp = static_cast<DBASE>(static_cast<DBASE>(static_cast<BASE>(res.coef[i + j]))
-            + static_cast<DBASE>(static_cast<BASE>(static_cast<DBASE>(num.coef[i])
-            * static_cast<DBASE>(num.coef[j])) * 2)
-            + static_cast<DBASE>(static_cast<BASE>(cu)));
+            tmp = static_cast<DBASE>(
+                static_cast<DBASE>(static_cast<BASE>(res.coef[i + j]))
+                + static_cast<DBASE>(
+                    static_cast<BASE>(static_cast<DBASE>(num.coef[i]) * static_cast<DBASE>(num.coef[j])) * 2)
+                + static_cast<DBASE>(static_cast<BASE>(cu)));
 
             v = static_cast<BASE>(tmp);
 
-            cu = static_cast<DBASE>(static_cast<DBASE>((
-            static_cast<DBASE>(static_cast<DBASE>(num.coef[i])
-            * static_cast<DBASE>(num.coef[j])) >> BASE_SIZE)
-            * static_cast<DBASE>(2))
-            + static_cast<DBASE>(static_cast<DBASE>(cu) >> BASE_SIZE)
-            + static_cast<DBASE>(static_cast<DBASE>(tmp) >> BASE_SIZE));
+            cu = static_cast<DBASE>(
+                static_cast<DBASE>(
+                    (static_cast<DBASE>(static_cast<DBASE>(num.coef[i]) * static_cast<DBASE>(num.coef[j])) >> BASE_SIZE)
+                    * static_cast<DBASE>(2))
+                + static_cast<DBASE>(static_cast<DBASE>(cu) >> BASE_SIZE)
+                + static_cast<DBASE>(static_cast<DBASE>(tmp) >> BASE_SIZE));
 
             res.coef[i + j] = v;
         }
@@ -789,7 +826,7 @@ BN square(BN num)
     }
 
     res.len = res.maxlen;
-    for (int i = 2*num.len-1; i > -1; i--) {
+    for (int i = 2 * num.len - 1; i > -1; i--) {
         if (res.coef[i] == 0) {
             res.len--;
         } else {
@@ -799,8 +836,8 @@ BN square(BN num)
     return res;
 }
 
-
-int numberOfDigit(int y) {
+int numberOfDigit(int y)
+{
     int n = 0;
     while (y != 0) {
         y = y >> 1;
@@ -809,10 +846,10 @@ int numberOfDigit(int y) {
     return n;
 }
 
-BN pow_bn_static(BN num, int y) {
+BN pow_bn_static(BN num, int y)
+{
     BN z;
-    int n = numberOfDigit(y),
-    mask = 1 << (n-2);
+    int n = numberOfDigit(y), mask = 1 << (n - 2);
     z = num;
     for (int i = n - 2; i > -1; i--) {
         z = square(z);
@@ -824,19 +861,21 @@ BN pow_bn_static(BN num, int y) {
     return z;
 }
 
-BN shift(BN num, int k) {
+BN shift(BN num, int k)
+{
     if (k >= num.len) {
         BN shift_num(k);
         return shift_num;
     }
-    BN shift_num(num.len-k, 0);
+    BN shift_num(num.len - k, 0);
     shift_num.len = shift_num.maxlen;
     for (int i = 0; i < num.len - k; i++)
-        shift_num.coef[i] = num.coef[i+k];
+        shift_num.coef[i] = num.coef[i + k];
     return shift_num;
 }
 
-BN rem(BN number, int k) {
+BN rem(BN number, int k)
+{
     if (k >= number.len) {
         return number;
     }
@@ -855,7 +894,8 @@ BN rem(BN number, int k) {
     return rem;
 }
 
-BN BarrettReduction(BN num, BN m, BN z) {
+BN BarrettReduction(BN num, BN m, BN z)
+{
     if (num.len > 2 * m.len) {
         throw invalid_argument("Invalid arguments. Module too small.");
     }
@@ -863,13 +903,13 @@ BN BarrettReduction(BN num, BN m, BN z) {
     b.len = b.maxlen;
     b.coef[1] = 1;
     q1 = (shift(num, m.len - 1) * z);
-    q1 = shift(q1,  m.len + 1);
-    r1 = rem(num, m.len+1);
-    r2 = rem((q1*m), m.len+1);
+    q1 = shift(q1, m.len + 1);
+    r1 = rem(num, m.len + 1);
+    r2 = rem((q1 * m), m.len + 1);
     if (r1 >= r2) {
-        rm = r1-r2;
+        rm = r1 - r2;
     } else {
-        BN new_b(2 * m.len +1 + b.len - 1, 0);
+        BN new_b(2 * m.len + 1 + b.len - 1, 0);
         new_b.len = new_b.maxlen;
         new_b.coef[2 * m.len + 2] = 1;
         rm = new_b + r1 - r2;
@@ -880,7 +920,8 @@ BN BarrettReduction(BN num, BN m, BN z) {
     return rm;
 }
 
-BN ret_z(BN m) {
+BN ret_z(BN m)
+{
     BN b(2, 0), z;
     b.len = b.maxlen;
     b.coef[1] = 1;
@@ -891,7 +932,8 @@ BN ret_z(BN m) {
     return z;
 }
 
-BN BN::square() {
+BN BN::square()
+{
     BN res(2 * len, 0);
     int j;
     DBASE cu = 0;
@@ -900,21 +942,21 @@ BN BN::square() {
     DBASE tmp = 0;
     res.len = res.maxlen;
     for (int i = 0; i < len; i++) {
-        uv = (DBASE)res.coef[2 * i] + (DBASE)coef[i] * (DBASE)coef[i];
-        res.coef[2 * i] = (BASE)uv;
+        uv = (DBASE) res.coef[2 * i] + (DBASE) coef[i] * (DBASE) coef[i];
+        res.coef[2 * i] = (BASE) uv;
         cu = (uv >> BASE_SIZE);
         for (j = i + 1; j < len; j++) {
-            tmp = static_cast<DBASE>(static_cast<DBASE>(static_cast<BASE>(res.coef[i + j]))
-                + static_cast<DBASE>(static_cast<BASE>(static_cast<DBASE>(coef[i])
-                    * static_cast<DBASE>(coef[j])) * 2)
+            tmp = static_cast<DBASE>(
+                static_cast<DBASE>(static_cast<BASE>(res.coef[i + j]))
+                + static_cast<DBASE>(static_cast<BASE>(static_cast<DBASE>(coef[i]) * static_cast<DBASE>(coef[j])) * 2)
                 + static_cast<DBASE>(static_cast<BASE>(cu)));
 
             v = static_cast<BASE>(tmp);
 
-            cu = static_cast<DBASE>(static_cast<DBASE>((
-                static_cast<DBASE>(static_cast<DBASE>(coef[i])
-                    * static_cast<DBASE>(coef[j])) >> BASE_SIZE)
-                * static_cast<DBASE>(2))
+            cu = static_cast<DBASE>(
+                static_cast<DBASE>(
+                    (static_cast<DBASE>(static_cast<DBASE>(coef[i]) * static_cast<DBASE>(coef[j])) >> BASE_SIZE)
+                    * static_cast<DBASE>(2))
                 + static_cast<DBASE>(static_cast<DBASE>(cu) >> BASE_SIZE)
                 + static_cast<DBASE>(static_cast<DBASE>(tmp) >> BASE_SIZE));
 
@@ -928,18 +970,17 @@ BN BN::square() {
     for (int i = 2 * len - 1; i > -1; i--) {
         if (res.coef[i] == 0) {
             res.len--;
-        }
-        else {
+        } else {
             break;
         }
     }
     return res;
 }
 
-BN BN::pow_bn(int y) {
+BN BN::pow_bn(int y)
+{
     BN z;
-    int n = numberOfDigit(y),
-        mask = 1 << (n - 2);
+    int n = numberOfDigit(y), mask = 1 << (n - 2);
     z = *this;
     for (int i = n - 2; i > -1; i--) {
         z = z.square();
@@ -951,7 +992,29 @@ BN BN::pow_bn(int y) {
     return z;
 }
 
-BN BN::root(int n) {
+BN BN::pow_mod(BN &exponent, BASE mod) const
+{
+    BN base = *this;
+    BN result, zero, one, two;
+    result = 1;
+    zero = 0;
+    one = 1;
+    two = 2;
+    BN exp = exponent;
+
+    while (exp > zero) {
+        if (exp % two == one) {
+            result = (result * base) % mod;
+        }
+        base = (base * base) % mod;
+        exp = exp / two;
+    }
+
+    return result;
+}
+
+BN BN::root(int n)
+{
     BN a = *this;
     BN x0, x1 = a;
     do {
@@ -961,7 +1024,8 @@ BN BN::root(int n) {
     return x0;
 }
 
-BN BN::gcd(const BN& b) {
+BN BN::gcd(const BN &b)
+{
     BN x = *this;
     BN y = b;
 
@@ -974,7 +1038,8 @@ BN BN::gcd(const BN& b) {
     return x;
 }
 
-BN BN::random_bound(BN a, BN b) {
+BN BN::random_bound(BN a, BN b)
+{
     if (a > b) {
         throw invalid_argument("Invalid range: a must be less than or equal to b.");
     }
@@ -991,7 +1056,8 @@ BN BN::random_bound(BN a, BN b) {
     return a + random_number;
 }
 
-int BN::log_bn(BN q) {
+int BN::log_bn(BN q)
+{
     BN one;
     one = 1;
     if (*this <= 0 || q <= one) {
@@ -1007,4 +1073,44 @@ int BN::log_bn(BN q) {
     }
 
     return result;
+}
+
+BN BN::mod_inverse(const BN &modulus)
+{
+    BN a = *this % modulus;
+    BN m = modulus;
+    BN m0 = m;
+    BN x0;
+    BN x1;
+    x0 = 0;
+    x1 = 1;
+    BN one;
+    one = 1;
+    BN zero;
+    zero = 0;
+
+    if (m == one)
+        return zero;
+
+    while (a > one) {
+        // Вычисляем частное
+        BN q = a / m;
+        BN t = m;
+
+        // Обновляем m и a
+        m = a % m;
+        a = t;
+        t = x0;
+
+        // Обновляем x0
+        BN temp = q * x0;
+        if (x1 >= temp)
+            x0 = x1 - temp;
+        else
+            x0 = x1 + m0 - (temp % m0);
+
+        x1 = t;
+    }
+
+    return x1 % m0;
 }
