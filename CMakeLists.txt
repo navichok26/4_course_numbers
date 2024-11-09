@@ -13,8 +13,7 @@ add_compile_definitions(__cpp_concepts=202002L)
 include_directories(${CMAKE_SOURCE_DIR}/deps/include)
 
 # Создаем список подпапок, в которых находятся main.cpp
-set(SUBDIRS 7)
-
+set(SUBDIRS 1 2 3 4 5 6 7)
 
 # Добавляем подмодуль Google Test
 add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)
