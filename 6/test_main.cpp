@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "algos.hpp"
-
+#include <expected>
 
 // 1.1
 TEST(GelfondsAlgorithmTests, 1_1) {
@@ -9,7 +9,8 @@ TEST(GelfondsAlgorithmTests, 1_1) {
     a = 418;
     int p = 599;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 185);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 185);
 }
 
 // 1.2
@@ -19,7 +20,8 @@ TEST(GelfondsAlgorithmTests, 1_2) {
     a = 183;
     int p = 599;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 321);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 321);
 }
 
 // 2.1
@@ -29,7 +31,8 @@ TEST(GelfondsAlgorithmTests, 2_1) {
     a = 21;
     int p = 599;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 221);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 221);
 }
 
 // 2.2
@@ -39,7 +42,8 @@ TEST(GelfondsAlgorithmTests, 2_2) {
     a = 269;
     int p = 599;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 436);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 436);
 }
 
 // 3.1
@@ -49,7 +53,8 @@ TEST(GelfondsAlgorithmTests, 3_1) {
     a = 647;
     int p = 1571;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 368);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 368);
 }
 
 // 3.2
@@ -59,7 +64,8 @@ TEST(GelfondsAlgorithmTests, 3_2) {
     a = 190;
     int p = 1571;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 1023);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 1023);
 }
 
 // 4.1
@@ -69,7 +75,8 @@ TEST(GelfondsAlgorithmTests, 4_1) {
     a = 912;
     int p = 1571;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 146);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 146);
 }
 
 // 4.2
@@ -79,7 +86,8 @@ TEST(GelfondsAlgorithmTests, 4_2) {
     a = 25;
     int p = 1571;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 86);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 86);
 }
 
 // 5.1
@@ -89,7 +97,8 @@ TEST(GelfondsAlgorithmTests, 5_1) {
     a = 625;
     int p = 10069;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 156);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 156);
 }
 
 // 5.2
@@ -99,7 +108,8 @@ TEST(GelfondsAlgorithmTests, 5_2) {
     a = 7128;
     int p = 10069;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 835);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 835);
 }
 
 // 6.1
@@ -109,7 +119,8 @@ TEST(GelfondsAlgorithmTests, 6_1) {
     a = 9458;
     int p = 10069;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 1024);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 1024);
 }
 
 // 6.2
@@ -119,5 +130,6 @@ TEST(GelfondsAlgorithmTests, 6_2) {
     a = 7330;
     int p = 10069;
     auto res = Gelfonds_algorithm(g, p, a);
-    EXPECT_TRUE(res == 2356);
+    ASSERT_TRUE(res.has_value());
+    EXPECT_EQ(*res, 2356);
 }

@@ -1,3 +1,4 @@
 #include <bigNum.hpp>
+#include <expected>
 
-int Gelfonds_algorithm(BN g, int p, BN a);
+std::expected<int, std::string> Gelfonds_algorithm(BN g, int p, BN a);
