@@ -1114,3 +1114,12 @@ BN BN::mod_inverse(const BN &modulus)
 
     return x1 % m0;
 }
+
+BASE BN::to_base() const
+{
+    if (len > 1) {
+        throw invalid_argument("Invalid arguments: n must be less than or equal to BASE_SIZE.");
+    }
+
+    return coef[0];
+}

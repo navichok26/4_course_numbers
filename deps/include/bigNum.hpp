@@ -65,6 +65,8 @@ public:
     BN mod_sub(const BN &other, int modulus);
     BN mod_inverse(const BN &modulus);
 
+    BASE to_base() const;
+
     static BN random_bound(BN a, BN b);
 
     friend BN operator*(BASE num, BN bNum)

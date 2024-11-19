@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "bigNum.hpp"
+
 bool in_S1(BN &x)
 {
     BN one;
@@ -88,12 +90,12 @@ std::expected<int, std::string> pollard_pmethod(BN g, int p, BN a)
             }
             BN result = (y_div_d * r_inv) % n_div_d;
 
-            std::vector<BN> solutions;
+            std::vector<int> solutions;
             for (BN k = BN(0); k < d; k = k + BN(1)) {
                 BN possible_result = (result + k * n_div_d) % n;
                 // Проверяем, является ли possible_result решением
                 if (g.pow_mod(possible_result, p) == a) {
-                    solutions.push_back(possible_result);
+                    solutions.push_back(possible_result.to_base());
                 }
             }
 
@@ -102,22 +104,7 @@ std::expected<int, std::string> pollard_pmethod(BN g, int p, BN a)
             }
 
             // Возвращаем одно из найденных решений
-            return 0;
-
-            // BN result = y2.mod_sub(y1, n) * r_inv % n;
-            // BN result = y2.mod_sub(y1, n) * r.mod_inverse(n) % n;
-
-            // Ищем z для g^z = a
-            // BN i, one;
-            // one = 1;
-            // for (i = 0; i < d; i = i + one) {
-            //     BN z = (result + i * (temp / d)) % n;
-            //     if (g.pow_mod(z, n) == a) {
-            //         return z.to_double();
-            //     }
-            // }
-
-            // return std::unexpected("Solution not found.");
+            return solutions[0];
         }
     }
 }

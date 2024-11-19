@@ -1,31 +1,34 @@
 #include "algos.hpp"
-#include <millerRabin.hpp>
-#include <cmath>
 
-bool is_prime(int n) {
+#include <cmath>
+#include <cstdint>
+
+#include <millerRabin.hpp>
+
+bool is_prime(int n)
+{
     if (n <= 1) {
         return false;
     }
     if (n == 2) {
-        return true; 
+        return true;
     }
     if (n % 2 == 0) {
-        return false; 
+        return false;
     }
 
     int limit = std::sqrt(n);
     for (int i = 3; i <= limit; i += 2) {
         if (n % i == 0) {
-            return false; 
+            return false;
         }
     }
 
-    return true; 
+    return true;
 }
 
-std::expected<BN, std::string> Pollard_2(BN n) 
+std::expected<BN, std::string> Pollard_2(BN n)
 {
-
     uint64_t B = 100;
     BN a, two, one, zero;
     one = 1;
@@ -35,10 +38,8 @@ std::expected<BN, std::string> Pollard_2(BN n)
     if (d > one)
         return d;
     uint64_t q = 2;
-    while (q < B) 
-    {
-        if (is_prime(q)) 
-        {
+    while (q < B) {
+        if (is_prime(q)) {
             uint64_t e = n.log_bn(q);
             double result = std::pow(q, e);
             // std::cout << "res:" << result << std::endl;
@@ -54,12 +55,11 @@ std::expected<BN, std::string> Pollard_2(BN n)
     if (a == one) {
         return std::unexpected("otkasz");
     } else {
-        d = (a-1).gcd(n); 
+        d = (a - 1).gcd(n);
     }
 
     if (d == one) {
         return std::unexpected("otkasz");
     }
     return d;
-
 }

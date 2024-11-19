@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_compile_definitions(__cpp_concepts=202002L)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
 
 # Добавляем файл BigNums.h в список включаемых директорий
 include_directories(${CMAKE_SOURCE_DIR}/deps/include)
