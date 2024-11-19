@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
 include_directories(${CMAKE_SOURCE_DIR}/deps/include)
 
 # Создаем список подпапок, в которых находятся main.cpp
-set(SUBDIRS 1 2 3 4 5 6 7)
+set(SUBDIRS 1 2 3 4 5 6 7 8 9)
 
 # Добавляем подмодуль Google Test
 add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)
@@ -25,10 +25,10 @@ enable_testing()
 # Проходим по каждой подпапке и добавляем цель для компиляции main.cpp
 foreach(SUBDIR ${SUBDIRS})
     # Компиляция main.cpp и algos.cpp
-    add_executable(main_${SUBDIR} ${SUBDIR}/main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp ${CMAKE_SOURCE_DIR}/deps/millerRabin.cpp)
+    add_executable(main_${SUBDIR} ${SUBDIR}/main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp ${CMAKE_SOURCE_DIR}/deps/millerRabin.cpp ${CMAKE_SOURCE_DIR}/deps/polinom.cpp)
 
     # Компиляция test_main.cpp и algos.cpp
-    add_executable(test_${SUBDIR} ${SUBDIR}/test_main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp)
+    add_executable(test_${SUBDIR} ${SUBDIR}/test_main.cpp ${SUBDIR}/algos.cpp ${CMAKE_SOURCE_DIR}/deps/bigNum.cpp ${CMAKE_SOURCE_DIR}/deps/polinom.cpp)
     target_link_libraries(test_${SUBDIR} gtest_main)
 
     # # Добавляем тесты
