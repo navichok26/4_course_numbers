@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
 include_directories(${CMAKE_SOURCE_DIR}/deps/include)
 
 # Создаем список подпапок, в которых находятся main.cpp
-set(SUBDIRS 1 2 3 4 5 6 7 8 9)
+set(SUBDIRS 1 2 3 4 5 6 7 8 9 10)
 
 # Добавляем подмодуль Google Test
 add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/googletest)

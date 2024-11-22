@@ -15,6 +15,8 @@ public:
     Polynomial operator-(const Polynomial &other) const;
     Polynomial operator*(const Polynomial &other) const;
     Polynomial operator%(const Polynomial &divisor) const;
+    bool operator==(const Polynomial &other) const;
+    bool operator!=(const Polynomial &other) const;
 
     static Polynomial gcd(const Polynomial &a, const Polynomial &b);
     Polynomial pow(int exponent, const Polynomial &mod_poly) const;

@@ -182,6 +182,18 @@ void Polynomial::print() const
     std::cout << std::endl;
 }
 
+// Перегрузка оператора ==
+bool Polynomial::operator==(const Polynomial &other) const
+{
+    return (p == other.p) && (coeffs == other.coeffs);
+}
+
+// Перегрузка оператора != (опционально)
+bool Polynomial::operator!=(const Polynomial &other) const
+{
+    return !(*this == other);
+}
+
 // Вычисление обратного элемента в поле Z_p с помощью расширенного алгоритма Евклида
 int Polynomial::inverse(int a, int mod)
 {
